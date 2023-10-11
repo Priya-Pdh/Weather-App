@@ -1,10 +1,14 @@
-const apiKey =
-  "https://api.openweathermap.org/data/2.5/weather?q=Stockholm,Sweden&units=metric&APPID=6675145806c7290b2d43a240155a964d";
+const apiKey = "6675145806c7290b2d43a240155a964d";
 
 const container = document.querySelector(".weather-container");
+const searchInput = document.getElementById("search-input");
+const searchBtn = document.getElementById("search-btn");
+const searchExitBtn = document.getElementById("search-exit-btn");
 
-const fetchWeatherData = () => {
-  fetch(apiKey)
+// Fetch Data
+const fetchWeatherData = (city) => {
+  const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city},Sweden&units=metric&APPID=${apiKey}`;
+  fetch(apiUrl)
     .then((response) => response.json())
     .then((data) => {
       console.log(data);
@@ -35,7 +39,6 @@ const fetchWeatherData = () => {
       const weatherDescription = document.createElement("p");
       const sunriseElement = document.createElement("p");
       const sunsetElement = document.createElement("p");
-      const sunImage = document.getElementById("sun-img");
       const divElement = document.createElement("div");
       divElement.classList.add("sunrise-sunset");
 
@@ -45,16 +48,30 @@ const fetchWeatherData = () => {
       sunriseElement.textContent = `Sunrise   ${sunriseTimeString}`;
       sunsetElement.textContent = `Sunset   ${sunsetTimeString}`;
 
-      sunImage.src = `/assets/sun.png`;
-      container.appendChild(temp);
-      container.appendChild(heading);
-      container.appendChild(weatherDescription);
-      container.appendChild(divElement).appendChild(sunriseElement);
-      container.appendChild(divElement).appendChild(sunsetElement);
+      container.append(temp, heading, weatherDescription);
+      container.append(divElement);
+      divElement.append(sunriseElement, sunsetElement);
     });
 };
 
-fetchWeatherData();
+// Output data: Set default city to Stockholm when page first loads
+fetchWeatherData("Stockholm");
+
+// Search cities when clicking search button
+searchBtn.addEventListener("click", () => {
+  container.textContent = "";
+  searchInput.style.visibility = "initial";
+  searchBtn.style.display = "none";
+  searchExitBtn.style.display = "initial";
+
+  fetchWeatherData(searchInput.value);
+});
+
+searchExitBtn.addEventListener("click", () => {
+  searchInput.style.visibility = "hidden";
+  searchBtn.style.display = "initial";
+  searchExitBtn.style.display = "none";
+});
 
 //5 days weather forecast
 
@@ -110,7 +127,7 @@ const getFiveDaysForecast = () => {
 
         switch (weatherDes.toLowerCase()) {
           case "clear sky":
-            weatherIcon = "☀️"; 
+            weatherIcon = "☀️";
             break;
           case "rain":
           case "moderate rain":
@@ -143,5 +160,5 @@ const getFiveDaysForecast = () => {
     .catch((error) => {
       console.log("Error fetching data:", error);
     });
-}
+};
 getFiveDaysForecast();
