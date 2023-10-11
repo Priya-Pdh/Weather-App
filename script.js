@@ -90,8 +90,10 @@ const getFiveDaysForecast = () => {
 
         // get data from api and store into a variable
 
-        const weatherDes = day.weather[0].description;
+        const weatherDes = day.weather[0].main;
+        console.log(weatherDes);
         const maxDegree = Math.floor(day.temp.max);
+        console.log(maxDegree);
         const minDegree = Math.floor(day.temp.min);
         console.log(
           `${date.toDateString()}: ${weatherDes}, Temperature: ${maxDegree}/ ${minDegree}°C`
@@ -109,16 +111,13 @@ const getFiveDaysForecast = () => {
         let weatherIcon;
 
         switch (weatherDes.toLowerCase()) {
-          case "clear sky":
+          case "clear":
             weatherIcon = "☀️"; 
             break;
           case "rain":
-          case "moderate rain":
-          case "light rain":
-          case "heavy rain":
             weatherIcon = "🌧️";
             break;
-          case "cloudy":
+          case "clouds":
             weatherIcon = "☁️";
             break;
           case "partly cloudy":
